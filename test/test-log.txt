@@ -1,0 +1,70 @@
+
+> agent-games-proof-gatekeeper@1.0.0 test
+> node test/harness.js
+
+harness: server on 127.0.0.1:45853 (test secret, isolated seen-store)
+[PASS] GET /agent health 200 {ok:true, protocolVersion:v1}
+[PASS] GET /health 200
+[PASS] GET /nope 404
+[PASS] preflight signed -> 200 {ok:true, protocolVersion:v1} + valid resp sig
+[PASS] preflight bad HMAC -> 401
+[PASS] preflight missing signature -> 401
+[agent] gk_harness_valid_001 APPROVE/VALID_CONDITION 1306ms proof=ok
+[PASS] valid task -> 200 APPROVE/VALID_CONDITION
+[PASS] valid task response signature valid
+[PASS] valid task proof present + 13 public signals
+[PASS] valid task proof verifies locally (snarkjs groth16 verify)
+[PASS] valid task proof_tx echoed
+[PASS] valid task answered in 1307ms (<60s deadline)
+  valid task wall time: 1307ms
+[agent] gk_harness_trap_vk_substitution_001 REJECT/VK_SUBSTITUTION 414ms proof=ok
+[PASS] VK_SUBSTITUTION -> REJECT/VK_SUBSTITUTION
+[PASS] VK_SUBSTITUTION response signature valid
+[PASS] VK_SUBSTITUTION proof verifies locally
+[PASS] VK_SUBSTITUTION answered in 487ms (<60s)
+[agent] gk_harness_trap_threshold_mismatch_001 REJECT/THRESHOLD_MISMATCH 395ms proof=ok
+[PASS] THRESHOLD_MISMATCH -> REJECT/THRESHOLD_MISMATCH
+[PASS] THRESHOLD_MISMATCH response signature valid
+[PASS] THRESHOLD_MISMATCH proof verifies locally
+[PASS] THRESHOLD_MISMATCH answered in 422ms (<60s)
+[agent] gk_harness_trap_expired_condition_001 REJECT/EXPIRED_CONDITION 377ms proof=ok
+[PASS] EXPIRED_CONDITION -> REJECT/EXPIRED_CONDITION
+[PASS] EXPIRED_CONDITION response signature valid
+[PASS] EXPIRED_CONDITION proof verifies locally
+[PASS] EXPIRED_CONDITION answered in 398ms (<60s)
+[agent] gk_harness_trap_recipient_mismatch_001 REJECT/RECIPIENT_MISMATCH 382ms proof=ok
+[PASS] RECIPIENT_MISMATCH -> REJECT/RECIPIENT_MISMATCH
+[PASS] RECIPIENT_MISMATCH response signature valid
+[PASS] RECIPIENT_MISMATCH proof verifies locally
+[PASS] RECIPIENT_MISMATCH answered in 470ms (<60s)
+[agent] gk_harness_trap_amount_overflow_001 REJECT/AMOUNT_OVERFLOW 326ms proof=ok
+[PASS] AMOUNT_OVERFLOW -> REJECT/AMOUNT_OVERFLOW
+[PASS] AMOUNT_OVERFLOW response signature valid
+[PASS] AMOUNT_OVERFLOW proof verifies locally
+[PASS] AMOUNT_OVERFLOW answered in 349ms (<60s)
+[agent] gk_harness_reuse_001 REJECT/PROOF_REUSED 1ms proof=none
+[PASS] PROOF_REUSED (same proof_tx, new task_id) -> REJECT/PROOF_REUSED
+[PASS] PROOF_REUSED carries NO proof
+[PASS] PROOF_REUSED echoes proof_tx
+[PASS] PROOF_REUSED response signature valid
+[PASS] retry same task_id -> byte-identical to original response
+[PASS] retry task_id is NOT flagged as PROOF_REUSED
+[PASS] task with wrong HMAC -> 401
+[PASS] task with tampered body (sig of original) -> 401
+[PASS] malformed JSON (signed) -> 400 REJECT/INVALID_TASK
+[PASS] unknown type (signed) -> 400 REJECT/INVALID_TASK
+[agent] gk_harness_bound_0 APPROVE/VALID_CONDITION 423ms proof=ok
+[PASS] boundary balance==minimum -> APPROVE
+[PASS] boundary balance==minimum -> APPROVE proof verifies
+[agent] gk_harness_bound_1 APPROVE/VALID_CONDITION 455ms proof=ok
+[PASS] boundary amount==max_transfer -> APPROVE
+[PASS] boundary amount==max_transfer -> APPROVE proof verifies
+[agent] gk_harness_bound_2 REJECT/EXPIRED_CONDITION 478ms proof=ok
+[PASS] boundary current_block==expiry_block -> REJECT EXPIRED
+[PASS] boundary current_block==expiry_block -> REJECT EXPIRED proof verifies
+[agent] gk_harness_bound_3 APPROVE/VALID_CONDITION 402ms proof=ok
+[PASS] boundary amount 0 -> APPROVE
+[PASS] boundary amount 0 -> APPROVE proof verifies
+[PASS] past-deadline task -> REJECT/INVALID_TASK (fail closed)
+
+harness: 51 passed, 0 failed (total 5556ms)

@@ -1,0 +1,16 @@
+# Render Blueprint: free-tier web service for the Proof Gatekeeper agent.
+# Deploy: connect this repo in Render, it picks up this file automatically.
+# Set AGENT_GAMES_HMAC_SECRET in the Render dashboard (dashboard -> agent ->
+# Rotate Secret) after registering the agent; then restart the service.
+services:
+  - type: web
+    name: agent-games-proof-gatekeeper
+    env: node
+    plan: free
+    region: singapore
+    buildCommand: npm install && npm run fetch-circuits
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: AGENT_GAMES_HMAC_SECRET
+        sync: false
